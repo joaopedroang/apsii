@@ -1,0 +1,53 @@
+/* Extract Method + Move Method 
+Escolhi Extract Method e Move Method porque o extrato() 
+da classe Cliente tinha um code smell, já que fazia tudo sozinho.
+O cálculo também usava só dados de Aluguel, o que é outro code smell.
+Separei cada parte em um método com nome claro e levei esses métodos 
+para Aluguel, que é quem tem os dados.*/
+
+public class Aluguel {
+    private int diasAlugada;
+    private Fita fita;
+
+    public Aluguel(Fita fita, int diasAlugada) {
+        this.fita = fita;
+        this.diasAlugada = diasAlugada;
+    }
+
+    public Fita getFita() {
+        return fita;
+    }
+
+    public int getDiasAlugada() {
+        return diasAlugada;
+    }
+
+    public double getValor() {
+        double valor = 0;
+
+        switch (fita.getCodigoDePreco()) {
+            case Fita.NORMAL:
+                valor += 2;
+                if (diasAlugada > 2)
+                    valor += (diasAlugada - 2) * 1.5;
+                break;
+            case Fita.LANCAMENTO:
+                valor += diasAlugada * 3;
+                break;
+            case Fita.INFANTIL:
+                valor += 1.5;
+                if (diasAlugada > 3)
+                    valor += (diasAlugada - 3) * 1.5;
+                break;
+        }
+        return valor;
+    }
+
+    public int getPontosDeAlugadorFrequente() {
+        int pontos = 1;
+        if (fita.getCodigoDePreco() == Fita.LANCAMENTO && diasAlugada > 1) {
+            pontos++;
+        }
+        return pontos;
+    }
+}
