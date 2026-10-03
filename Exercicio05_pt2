@@ -1,0 +1,42 @@
+/*  Escolhi o Replace Conditional with Polymorphism porque o switch que calculava o preço pelo tipo da fita era um code smell,
+a cada tipo novo de fita eu teria que mexer nesse código, e o risco de quebrar algo que já funcionava aumenta. 
+Troquei o switch por uma classe para cada tipo, cada uma com a sua regra de valor e de pontos. Usei composição e não subclasses de Fita, 
+porque o tipo da fita pode mudar depois de criada. Agora, para criar um tipo novo, basta criar uma classe nova, 
+sem alterar as que já existem, e o resultado do programa continua o mesmo.
+*/
+import java.util.*;
+
+public class Cliente {
+    private String nome;
+    private List<Aluguel> alugueis = new ArrayList<>();
+
+    public Cliente(String nome) {
+        this.nome = nome;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void adicionaAluguel(Aluguel aluguel) {
+        alugueis.add(aluguel);
+    }
+
+    public String extrato() {
+        double valorTotal = 0;
+        int pontosDeAlugadorFrequente = 0;
+        String resultado = "Registro de Alugueis de " + getNome() + "\n";
+
+        for (Aluguel aluguel : alugueis) {
+            double valorCorrente = aluguel.getValor();
+            pontosDeAlugadorFrequente += aluguel.getPontosDeAlugadorFrequente();
+
+            resultado += "\t" + aluguel.getFita().getTitulo() + "\t" + valorCorrente + "\n";
+            valorTotal += valorCorrente;
+        }
+
+        resultado += "Valor total devido: " + valorTotal + "\n";
+        resultado += "Você ganhou " + pontosDeAlugadorFrequente + " pontos de alugador frequente";
+        return resultado;
+    }
+}
